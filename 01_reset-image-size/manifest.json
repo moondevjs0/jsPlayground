@@ -1,0 +1,11 @@
+{
+  "name": "01_reset-image-size",
+  "id": "1178559584943295279",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": [
+    "figma",
+    "figjam"
+  ],
+  "ui": "ui.html"
+}
