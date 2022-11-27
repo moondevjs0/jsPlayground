@@ -1,15 +1,68 @@
 <style>
-    html {
-        margin: 0;
-        padding: 0;
-        border: 0 none;
-    }
-    
     body {
-        font-family: Sans-serif;
+      font-family: sans-serif;
+      font-size: 14px;
     }
-</style>
-<div>
-    <h2>Hello, world!</h2>
-    <p>This is my first plugin.</p>
-</div>
+      
+    .content {
+      display: flex;
+    }
+      
+    img {
+      max-width: 800px;
+      max-height: 536px;
+    }
+      
+    button {
+      background-color: rgba(0, 0, 0, 87);
+      border: none;
+      color: #fff;
+      margin: 8px;
+      padding: 8px 16px;
+    }
+  </style>
+      
+  <div class="content">
+    <!-- 이미지를 정보를 표시할 영역입니다. -->
+    <p id="info"></p>
+    <!-- 함수를 실행하기 위한 버튼입니다. -->
+    <button id="reset">Reset</button>
+  </div>
+  <!-- 이미지를 표시할 영역입니다. -->
+  <div id="gallery"></div>
+      
+  <script>
+    //이미지 사이즈를 저장하기 위한 변수입니다.
+    let naturalWidth;
+    let naturalHeight;
+    
+    //code.js에서 보내온 message를 수신합니다.
+    window.onmessage = async (event) => {
+      //code.js에서 받은 이미지 데이터를 bytes 변수에 지정합니다.
+      const bytes = event.data.pluginMessage;
+      
+      //화면에 이미지를 표시하기 위해 img 태그를 생성합니다.
+      const img = document.createElement('img');
+      
+      //이미지 데이터를 img.src에 지정합니다.
+      img.src = URL.createObjectURL(new Blob([bytes], {type: 'image/png'}));
+      
+      //gallery 영역에 img 태그를 추가합니다.
+      gallery.appendChild(img);
+      
+      //이미지를 불러오면 실행될 함수입니다.
+      img.onload = function () {
+        //불러온 이미지의 실제 사이즈를 변수에 지정합니다.
+        naturalWidth = img.naturalWidth;
+        naturalHeight = img.naturalHeight;
+  
+        //info 영역에 이미지 사이즈를 표시합니다.
+        info.innerHTML = "Original Size: " + naturalWidth + "x" + naturalHeight;
+      }
+    }
+      
+    //reset 버튼을 클릭하면 window.parent.postMessage()를 사용해 code.js로 이미지 사이즈를 보내줍니다.
+    reset.addEventListener('click', function (e) {
+      window.parent.postMessage({pluginMessage: {width: naturalWidth, height: naturalHeight}}, '*');
+     }, false);
+  </script>
